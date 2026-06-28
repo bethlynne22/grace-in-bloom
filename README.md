@@ -1,15 +1,12 @@
-# Grace in Bloom
+# Grace in Bloom Product v1
 
-A clean GitHub Pages starter site for Grace in Bloom.
+This is a usable GitHub Pages version with:
+- Homepage artwork
+- Clickable sections
+- Bible reader with KJV public domain selections
+- Honey Drops devotional
+- Study Companion journal
+- Prayer Garden
+- Creativity Garden
 
-## Upload instructions
-Upload everything inside this ZIP to the root of the repository.
-
-## Turn on GitHub Pages
-Go to Settings → Pages → Build and deployment.
-Choose:
-- Source: Deploy from a branch
-- Branch: main
-- Folder: /root
-
-Then click Save.
+Upload everything inside this ZIP to your GitHub repository root.
