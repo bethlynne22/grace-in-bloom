@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grace in Bloom</title>
+  <style>
+    :root {
+      --cream: #fff7e8;
+      --ink: #3b2617;
+      --wood: #6b4326;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Georgia, "Times New Roman", serif;
+      background: #120806;
+      color: var(--cream);
+      overflow-x: hidden;
+    }
+    .arrival {
+      position: relative;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      isolation: isolate;
+      background: #120806;
+    }
+    .arrival::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: var(--scene-image);
+      background-size: cover;
+      background-position: center;
+      transform: scale(1.02);
+      z-index: -3;
+    }
+    .arrival::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at center, rgba(255, 244, 210, 0.04), rgba(0, 0, 0, 0.45)),
+        linear-gradient(to bottom, rgba(0,0,0,0.15), rgba(0,0,0,0.50));
+      z-index: -2;
+      pointer-events: none;
+    }
+    body.morning { --scene-image: url("arrival-sunrise.jpg"); }
+    body.day { --scene-image: url("arrival-day.jpg"); }
+    body.sunset { --scene-image: url("arrival-sunset.jpg"); }
+    body.night { --scene-image: url("arrival-night.jpg"); }
+
+    .welcome-card {
+      width: min(92vw, 760px);
+      padding: 28px 24px;
+      text-align: center;
+      background: rgba(31, 18, 10, 0.46);
+      border: 1px solid rgba(255, 236, 186, 0.38);
+      border-radius: 28px;
+      box-shadow: 0 18px 60px rgba(0,0,0,0.35);
+      backdrop-filter: blur(6px);
+      animation: softAppear 1.4s ease both;
+    }
+    @keyframes softAppear {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .welcome-card h1 {
+      margin: 0;
+      font-size: clamp(2.2rem, 7vw, 4.8rem);
+      letter-spacing: 0.02em;
+      text-shadow: 0 4px 18px rgba(0,0,0,0.55);
+    }
+    .welcome-card p {
+      margin: 12px auto 22px;
+      max-width: 560px;
+      font-size: clamp(1.05rem, 3vw, 1.35rem);
+      line-height: 1.45;
+      color: #fff3d3;
+      text-shadow: 0 3px 12px rgba(0,0,0,0.55);
+    }
+    .trail-signs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+    .trail-sign {
+      display: block;
+      text-decoration: none;
+      color: #fff6d8;
+      background: linear-gradient(180deg, rgba(139, 86, 44, 0.95), rgba(74, 42, 20, 0.95));
+      border: 1px solid rgba(255, 232, 180, 0.45);
+      border-radius: 16px;
+      padding: 13px 12px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.22), 0 6px 18px rgba(0,0,0,0.28);
+      font-weight: bold;
+      transition: transform 180ms ease, filter 180ms ease;
+    }
+    .trail-sign:hover, .trail-sign:focus {
+      transform: translateY(-2px);
+      filter: brightness(1.1);
+      outline: none;
+    }
+    .small-link {
+      margin-top: 16px;
+      border: 0;
+      background: transparent;
+      color: #ffecc0;
+      text-decoration: underline;
+      font-family: inherit;
+      font-size: 0.98rem;
+      cursor: pointer;
+    }
+    .character-panel {
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      padding: 18px;
+      background: rgba(12, 8, 5, 0.74);
+      z-index: 20;
+    }
+    .character-panel.open { display: grid; }
+    .character-box {
+      width: min(95vw, 850px);
+      max-height: 92vh;
+      overflow-y: auto;
+      background: #fff7e8;
+      color: var(--ink);
+      border-radius: 26px;
+      padding: 22px;
+      box-shadow: 0 20px 80px rgba(0,0,0,0.45);
+      border: 3px solid rgba(119, 74, 36, 0.5);
+    }
+    .character-box h2 {
+      margin: 0 0 8px;
+      font-size: clamp(1.7rem, 5vw, 2.5rem);
+      color: #5d351d;
+      text-align: center;
+    }
+    .character-box .hint {
+      text-align: center;
+      margin: 0 auto 18px;
+      max-width: 620px;
+      color: #63452f;
+      line-height: 1.45;
+    }
+    .characters {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .character-card {
+      border: 2px solid #d4b98d;
+      border-radius: 18px;
+      padding: 12px;
+      background: #fffdf6;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+    }
+    .character-card.selected {
+      border-color: #8b5a2b;
+      box-shadow: 0 0 0 4px rgba(139, 90, 43, 0.18);
+      transform: translateY(-2px);
+    }
+    .character-portrait {
+      width: 96px;
+      height: 96px;
+      margin: 0 auto 8px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #e9d0a8, #f8eed8);
+      font-size: 2.4rem;
+      border: 1px solid #d9b778;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    label { font-weight: bold; color: #4b2c18; }
+    input, select {
+      width: 100%;
+      margin-top: 5px;
+      padding: 12px;
+      border: 1px solid #c7a77a;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-family: inherit;
+      background: #fffdf8;
+      color: #2f1c10;
+    }
+    .birthday-row {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr;
+      gap: 10px;
+    }
+    .panel-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+      justify-content: center;
+    }
+    .primary-btn, .secondary-btn {
+      border: 0;
+      border-radius: 999px;
+      padding: 12px 18px;
+      font-family: inherit;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .primary-btn { background: #6b4326; color: #fff7e8; }
+    .secondary-btn { background: #ead8b9; color: #4b2c18; }
+    .settings-button {
+      position: fixed;
+      right: 14px;
+      bottom: 14px;
+      z-index: 10;
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 999px;
+      padding: 10px 12px;
+      background: rgba(40, 24, 13, 0.55);
+      color: #fff2d2;
+      font-size: 1rem;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+    }
+    .welcome-name { font-weight: bold; color: #fff9df; }
+    @media (max-width: 520px) {
+      .welcome-card { padding: 22px 16px; }
+      .trail-signs { grid-template-columns: 1fr 1fr; }
+      .birthday-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="arrival" aria-label="Grace in Bloom Arrival">
+    <section class="welcome-card">
+      <h1>Welcome Home</h1>
+      <p id="welcomeText">Where would you like to begin today?</p>
+
+      <div class="trail-signs" aria-label="Grace in Bloom paths">
+        <a class="trail-sign" href="grand-library.html">📚 Grand Library</a>
+        <a class="trail-sign" href="cabin.html">🏡 Cabin</a>
+        <a class="trail-sign" href="woodland-welcome.html">🌲 Woodland Welcome</a>
+        <a class="trail-sign" href="gardens.html">🌺 Gardens</a>
+        <a class="trail-sign" href="quilt-workshop.html">🧵 Quilt Workshop</a>
+        <a class="trail-sign" href="art-studio.html">🎨 Art Studio</a>
+        <a class="trail-sign" href="bible-lands.html">🗺️ Bible Lands</a>
+        <a class="trail-sign" href="my-journey.html">❤️ Continue My Journey</a>
+      </div>
+
+      <button class="small-link" onclick="openCharacterPanel()">Choose or edit your Grace in Bloom character</button>
+    </section>
+  </main>
+
+  <button class="settings-button" onclick="openCharacterPanel()" aria-label="Character settings">⚙️</button>
+
+  <section class="character-panel" id="characterPanel" aria-label="Create your Grace in Bloom character">
+    <div class="character-box">
+      <h2>Create Your Grace in Bloom Character</h2>
+      <p class="hint">Choose who will walk into Grace in Bloom with you. Your character will be remembered and can join your family in the Woodland Welcome.</p>
+
+      <div class="characters" id="characters">
+        <div class="character-card" data-character="girl" onclick="selectCharacter(this)"><div class="character-portrait">👧</div><strong>Girl</strong></div>
+        <div class="character-card" data-character="boy" onclick="selectCharacter(this)"><div class="character-portrait">👦</div><strong>Boy</strong></div>
+        <div class="character-card" data-character="teen-girl" onclick="selectCharacter(this)"><div class="character-portrait">🌸</div><strong>Teen Girl</strong></div>
+        <div class="character-card" data-character="teen-boy" onclick="selectCharacter(this)"><div class="character-portrait">🌲</div><strong>Teen Boy</strong></div>
+        <div class="character-card" data-character="woman" onclick="selectCharacter(this)"><div class="character-portrait">👩</div><strong>Woman</strong></div>
+        <div class="character-card" data-character="man" onclick="selectCharacter(this)"><div class="character-portrait">👨</div><strong>Man</strong></div>
+      </div>
+
+      <div class="form-grid">
+        <label>Character Name
+          <input id="characterName" type="text" placeholder="Example: Lily, Grace, Emma, Noah" />
+        </label>
+
+        <label>Birthday Optional
+          <div class="birthday-row">
+            <select id="birthMonth">
+              <option value="">Month</option>
+              <option>January</option><option>February</option><option>March</option><option>April</option>
+              <option>May</option><option>June</option><option>July</option><option>August</option>
+              <option>September</option><option>October</option><option>November</option><option>December</option>
+            </select>
+            <input id="birthDay" type="number" min="1" max="31" placeholder="Day" />
+            <input id="birthYear" type="number" min="1900" max="2100" placeholder="Year" />
+          </div>
+        </label>
+      </div>
+
+      <div class="panel-actions">
+        <button class="primary-btn" onclick="saveCharacter()">Save My Character</button>
+        <button class="secondary-btn" onclick="skipCharacter()">Skip For Now</button>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const hour = new Date().getHours();
+
+    if (hour >= 5 && hour < 10) {
+      document.body.classList.add('morning');
+    } else if (hour >= 10 && hour < 17) {
+      document.body.classList.add('day');
+    } else if (hour >= 17 && hour < 20) {
+      document.body.classList.add('sunset');
+    } else {
+      document.body.classList.add('night');
+    }
+
+    let selectedCharacter = localStorage.getItem('gib-character') || "";
+
+    function openCharacterPanel() {
+      document.getElementById('characterPanel').classList.add('open');
+      loadCharacterForm();
+    }
+
+    function closeCharacterPanel() {
+      document.getElementById('characterPanel').classList.remove('open');
+    }
+
+    function selectCharacter(card) {
+      document.querySelectorAll('.character-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      selectedCharacter = card.dataset.character;
+    }
+
+    function saveCharacter() {
+      const name = document.getElementById('characterName').value.trim();
+      const month = document.getElementById('birthMonth').value;
+      const day = document.getElementById('birthDay').value;
+      const year = document.getElementById('birthYear').value;
+
+      if (!selectedCharacter) {
+        alert("Choose a character first.");
+        return;
+      }
+
+      if (!name) {
+        alert("Give your character a name first.");
+        return;
+      }
+
+      localStorage.setItem('gib-character', selectedCharacter);
+      localStorage.setItem('gib-character-name', name);
+      localStorage.setItem('gib-birth-month', month);
+      localStorage.setItem('gib-birth-day', day);
+      localStorage.setItem('gib-birth-year', year);
+
+      updateWelcome();
+      closeCharacterPanel();
+    }
+
+    function skipCharacter() {
+      localStorage.setItem('gib-character-skipped', 'true');
+      closeCharacterPanel();
+    }
+
+    function loadCharacterForm() {
+      const savedCharacter = localStorage.getItem('gib-character');
+      const savedName = localStorage.getItem('gib-character-name') || "";
+      const savedMonth = localStorage.getItem('gib-birth-month') || "";
+      const savedDay = localStorage.getItem('gib-birth-day') || "";
+      const savedYear = localStorage.getItem('gib-birth-year') || "";
+
+      selectedCharacter = savedCharacter || selectedCharacter;
+
+      document.querySelectorAll('.character-card').forEach(card => {
+        card.classList.toggle('selected', card.dataset.character === selectedCharacter);
+      });
+
+      document.getElementById('characterName').value = savedName;
+      document.getElementById('birthMonth').value = savedMonth;
+      document.getElementById('birthDay').value = savedDay;
+      document.getElementById('birthYear').value = savedYear;
+    }
+
+    function updateWelcome() {
+      const name = localStorage.getItem('gib-character-name');
+      const welcome = document.getElementById('welcomeText');
+
+      if (name) {
+        welcome.innerHTML = `Welcome back, <span class="welcome-name">${name}</span>. Where would you like to begin today?`;
+      } else {
+        welcome.textContent = "Where would you like to begin today?";
+      }
+    }
+
+    updateWelcome();
+
+    window.addEventListener('load', () => {
+      const hasCharacter = localStorage.getItem('gib-character-name');
+      const skipped = localStorage.getItem('gib-character-skipped');
+
+      if (!hasCharacter && !skipped) {
+        setTimeout(openCharacterPanel, 1200);
+      }
+    });
+  </script>
+</body>
+</html>
