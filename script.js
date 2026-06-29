@@ -1,20 +1,52 @@
+let selectedCharacter = "";
 
-const label=document.getElementById('label');
-document.querySelectorAll('.hotspot').forEach(h=>{
-  h.addEventListener('mouseenter',()=>{label.textContent=h.dataset.tip;label.style.display='block';});
-  h.addEventListener('mousemove',e=>{label.style.left=(e.clientX+12)+'px';label.style.top=(e.clientY+12)+'px';});
-  h.addEventListener('mouseleave',()=>{label.style.display='none';});
+document.querySelectorAll(".character-card").forEach(card => {
+  card.addEventListener("click", () => {
+    document.querySelectorAll(".character-card").forEach(c => c.classList.remove("selected"));
+    card.classList.add("selected");
+    selectedCharacter = card.dataset.character;
+  });
 });
 
-function saveNote(id){
-  const el=document.getElementById(id);
-  localStorage.setItem("grace-"+id, el.value);
-  alert("Saved in this browser.");
+const enterButton = document.getElementById("enterGrace");
+if (enterButton) {
+  enterButton.addEventListener("click", () => {
+    const name = document.getElementById("characterName").value.trim();
+    const month = document.getElementById("birthMonth").value;
+    const day = document.getElementById("birthDay").value;
+    const year = document.getElementById("birthYear").value;
+
+    if (!selectedCharacter) {
+      alert("Choose a character first.");
+      return;
+    }
+
+    if (!name) {
+      alert("Name your character first.");
+      return;
+    }
+
+    localStorage.setItem("gib-character", selectedCharacter);
+    localStorage.setItem("gib-character-name", name);
+    localStorage.setItem("gib-birth-month", month);
+    localStorage.setItem("gib-birth-day", day);
+    localStorage.setItem("gib-birth-year", year);
+    localStorage.setItem("gib-arrival-complete", "true");
+
+    window.location.href = "woodland.html";
+  });
 }
-function loadNote(id){
-  const el=document.getElementById(id);
-  if(el) el.value=localStorage.getItem("grace-"+id)||"";
+
+const skipButton = document.getElementById("skipSetup");
+if (skipButton) {
+  skipButton.addEventListener("click", () => {
+    localStorage.setItem("gib-arrival-complete", "true");
+    window.location.href = "woodland.html";
+  });
 }
-document.addEventListener("DOMContentLoaded",()=>{
-  ["prayerNote","journalNote","creativeNote"].forEach(loadNote);
-});
+
+const greeting = document.getElementById("woodlandGreeting");
+if (greeting) {
+  const name = localStorage.getItem("gib-character-name");
+  greeting.textContent = name ? `Welcome Home, ${name}` : "Welcome Home";
+}
