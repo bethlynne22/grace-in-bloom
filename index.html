@@ -78,6 +78,19 @@ button{padding:10px 14px;border-radius:999px;border:2px solid #e4bd62;background
 <script>
 document.getElementById('journal').value=localStorage.getItem('grace-journal')||'';
 document.getElementById('prayerBox').value=localStorage.getItem('grace-prayer')||'';
+document.getElementById('journal').value =
+    localStorage.getItem('grace-journal') || "";
+
+document.getElementById('prayerBox').value =
+    localStorage.getItem('grace-prayer') || "";
+
+const hour = new Date().getHours();
+
+if (hour >= 6 && hour < 18) {
+    document.body.classList.add('day-theme');
+} else {
+    document.body.classList.add('night-theme');
+}
 </script>
 </body>
 </html>
