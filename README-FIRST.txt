@@ -1,31 +1,34 @@
-GRACE IN BLOOM V3 - START HERE
+GRACE IN BLOOM - GRAND LIBRARY ROOM
 
-WHAT THIS PACKAGE DOES
-1. index.html is the first arrival page.
-2. woodland.html is the Woodland Gathering home page.
-3. style.css controls the look.
-4. script.js saves the chosen character name and birthday.
-5. images/ holds your artwork.
+WHAT THIS IS
+This is the first Grand Library upload-ready room.
 
-IMPORTANT IMAGE NAMES
-Put your main Woodland Gathering artwork here:
-images/woodland-gathering.jpg
+FILES
+grand-library.html
+grand-library.css
+grand-library.js
+images/grand-library.jpg
 
-Optional arrival backgrounds:
-images/arrival-night.jpg
-images/arrival-day.jpg
-images/arrival-sunrise.jpg
-images/arrival-sunset.jpg
+HOW TO USE
+1. Upload all files into your GitHub repository.
+2. Commit changes.
+3. Open grand-library.html in your GitHub Pages site.
+4. Tap the ? button to show clickable places.
 
-HOW TO USE ON GITHUB
-1. Keep your old files for now if you are nervous.
-2. Upload these files into your repo.
-3. Make sure index.html is at the main/root level.
-4. Upload your artwork into the images folder.
-5. Commit changes.
-6. Open your GitHub Pages link.
+IMPORTANT
+The image must be named exactly:
+images/grand-library.jpg
 
-DO NOT WORRY
-If the picture does not show, it usually means the image file name does not match.
-The main image must be exactly:
-woodland-gathering.jpg
+CLICKABLE PLACES
+Open Bible
+Scriptures & Prayer
+Discovery Upstairs
+Read Inside the Tree
+Kids Corner
+Fireside Reading
+Quilt Workshop
+Art Studio
+Back to Woodland
+
+NOTE
+Some links will show 404 until we build those rooms. That is normal.
